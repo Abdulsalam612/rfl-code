@@ -1,5 +1,8 @@
 #include <drv8711.h>
 #include <robot_motors.h>
+
+#include <drv8711.h>
+#include <robot_motors.h>
 #include <Bluepad32.h>
 #include <cstring>
 

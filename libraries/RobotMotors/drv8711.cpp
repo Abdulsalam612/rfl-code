@@ -437,7 +437,7 @@ void DRV8711::configureDefaultBrushedMotorProfile(){
   //33.3A across the mosfets will cause a 250 mV voltage drop
   //due to the 7.5 mOhm internal resistance
   //This is sensed by the chip and will throw an overcurrent fault 
-  setOverCurrentProtectionThreshold(mV_250);
+  setOverCurrentProtectionThreshold(mV_750);
   setOverCurrentDeglitch(us_8);
 
   //We are using brushed motor so we tell the DRV8711

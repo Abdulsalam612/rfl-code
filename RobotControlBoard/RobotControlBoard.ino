@@ -6,20 +6,22 @@
 #include <Bluepad32.h>
 #include <cstring>
 
+
 #define LED_PIN 2
+#define RELAY_PIN 21 //Added Relay to GPIO 21
 
 ControllerPtr myController;
 
 Motors robotMotors;
 
 //Set this to either true or false to determine whether any controller can connect
-const bool ALLOW_ANY_CONTROLLER_TO_CONNECT = true;
+const bool ALLOW_ANY_CONTROLLER_TO_CONNECT = false;
 
 //Every controller has a unique bluetooth address, similar to how internet devices have a unique IP address
 //If you want to only allow a particular controller to connect, then add the 6 digit bluetooth address below
 //To find the bluetooth address of the controller: Simply put it in pairing mode, plug in the board and open the serial monitor
 //The controllers bluetooth address will be printed in the serial monitor when it attempts to connect
-uint8_t whitelistedControllerBTAddress[6] = {0, 0, 0, 0, 0, 0};
+uint8_t whitelistedControllerBTAddress[6] = {76, 185, 155, 170, 168, 59};
 //Example of a whitelisted controller bluetooth address:
 // uint8_t whitelistedControllerBTAddress[6] = {28, 160, 184, 87, 59, 170};
 
@@ -119,6 +121,19 @@ void processControllerInputs(ControllerPtr myController) {
     robotMotors.setMotorSpeed(LEFT_MOTOR, leftThrottle);
     robotMotors.setMotorSpeed(RIGHT_MOTOR, rightThrottle);
 
+    if (myController->buttons() & myController->a()) {
+        digitalWrite(RELAY_PIN, HIGH);  // Set relay HIGH when X button is pressed
+    } else {
+        digitalWrite(RELAY_PIN, LOW);  // set relay LOW when not pressed
+    }
+
+    // if (myController->buttons() & myController->a()) {
+    //     digitalWrite(RELAY_PIN, HIGH);  // Set relay HIGH when X button is pressed
+    //     delay(400);
+    //     digitalWrite(RELAY_PIN, LOW);  // set relay LOW when not pressed
+    // }
+
+
     printController(myController);
 }
 
@@ -147,6 +162,8 @@ void setup() {
     robotMotors.init();
     robotMotors.setCurrentLimit(15);
     pinMode(LED_PIN, OUTPUT);
+    pinMode(RELAY_PIN, OUTPUT);  // Initialize Relay
+    digitalWrite(RELAY_PIN, LOW);  //Have it start at low
 }
 
 void loop() {
@@ -173,10 +190,12 @@ void loop() {
 
     //This checks for any motor controller faults
     //If any are detected it will print the error and try to automatically clear the faults
-    robotMotors.checkFaults();
+    //robotMotors.checkFaults();
 
     //This toggles the LED every loop
     digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    //digitalWrite(RELAY_PIN, !digitalRead(RELAY_PIN));
+    
 
     //We add a delay of 30 milliseconds for each loop
     //This means that the loop will run aproximately 30 times per second

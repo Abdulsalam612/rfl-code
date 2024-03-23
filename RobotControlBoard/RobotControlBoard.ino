@@ -8,7 +8,7 @@
 
 
 #define LED_PIN 2
-#define RELAY_PIN 21 //Added Relay to GPIO 21
+#define RELAY_PIN 22 //Added Relay to GPIO 22
 
 ControllerPtr myController;
 
@@ -16,6 +16,8 @@ Motors robotMotors;
 
 //Set this to either true or false to determine whether any controller can connect
 const bool ALLOW_ANY_CONTROLLER_TO_CONNECT = false;
+
+ 
 
 //Every controller has a unique bluetooth address, similar to how internet devices have a unique IP address
 //If you want to only allow a particular controller to connect, then add the 6 digit bluetooth address below
@@ -121,17 +123,18 @@ void processControllerInputs(ControllerPtr myController) {
     robotMotors.setMotorSpeed(LEFT_MOTOR, leftThrottle);
     robotMotors.setMotorSpeed(RIGHT_MOTOR, rightThrottle);
 
-    if (myController->buttons() & myController->a()) {
+    if ( myController->b()) {
         digitalWrite(RELAY_PIN, HIGH);  // Set relay HIGH when X button is pressed
     } else {
         digitalWrite(RELAY_PIN, LOW);  // set relay LOW when not pressed
     }
 
-    // if (myController->buttons() & myController->a()) {
-    //     digitalWrite(RELAY_PIN, HIGH);  // Set relay HIGH when X button is pressed
-    //     delay(400);
-    //     digitalWrite(RELAY_PIN, LOW);  // set relay LOW when not pressed
-    // }
+     if ( myController->a()) {
+        digitalWrite(RELAY_PIN, HIGH);  // Set relay HIGH when X button is pressed
+        delay(400);
+        digitalWrite(RELAY_PIN, LOW);  // set relay LOW when not pressed
+    }
+
 
 
     printController(myController);
